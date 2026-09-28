@@ -22,3 +22,25 @@ Non functional requirements are:
 1. Low latency event lookup.
 2. Data consistency for event and availability.
 3. Must be scalable horizontally.
+4. No UI & auth
+
+```text
+workshops/
+├── cmd/
+│   └── api/
+│       └── main.go          # Binary entry point (wires dependencies, starts server)
+├── internal/                # Private application code (enforced by Go compiler)
+│   ├── config/              # Environment/App configuration
+│   ├── database/            # DB connections, migrations, pool setup
+│   ├── event/            # Workshop domain (handlers, service, store)
+│   │   ├── handler.go       # HTTP/Transport layer (JSON decode/encode)
+│   │   ├── service.go       # Business logic
+│   │   └── store.go         # Database queries / SQL
+│   └── contact/                # User domain (or other API domains)
+│       ├── handler.go
+│       ├── service.go
+│       └── store.go
+├── go.mod
+└── go.sum
+
+```

@@ -19,15 +19,15 @@ type EvenCreationRequest struct {
 	Title string `json:"title"`
 }
 
-type PostgresDBStore struct {
+type MySQLStore struct {
 	db *sql.DB
 }
 
-func NewPostgresStore(db *sql.DB) *PostgresDBStore {
-	return &PostgresDBStore{db: db}
+func NewMySQLStore(db *sql.DB) *MySQLStore {
+	return &MySQLStore{db: db}
 }
 
-func (p *PostgresDBStore) Create(e EvenCreationRequest) error {
+func (p *MySQLStore) Create(e EvenCreationRequest) error {
 	query := `INSERT INTO events (id, title, created_on, modified_on) VALUES (?, ?, ?, ?)`
 	_, err := p.db.Exec(query, uuid.NewString(), e.Title, time.Now(), time.Now())
 
@@ -38,7 +38,7 @@ func (p *PostgresDBStore) Create(e EvenCreationRequest) error {
 	return nil
 }
 
-func (p *PostgresDBStore) GetById(id string) (Event, error) {
+func (p *MySQLStore) GetById(id string) (Event, error) {
 	query := `SELECT id, title, created_on FROM events WHERE id = $1`
 	row := p.db.QueryRow(query, id)
 

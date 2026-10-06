@@ -37,7 +37,7 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	eventStore := event.NewPostgresStore(db)
+	eventStore := event.NewMySQLStore(db)
 	eventService := event.NewService(eventStore)
 	eventHandler := event.NewHandler(eventService)
 	eventHandler.RegisterRoutes(mux)

@@ -1,0 +1,6 @@
+# BMad AI Workflow Rules
+
+- Always check `.bmad/` for project context, architecture decisions, and task briefs before coding.
+- When executing multi-step planning or build tasks, adopt the appropriate persona defined in `.bmad/agents/`.
+- For planning: follow BMad tasks and enforce quality gates using `.bmad/checklists/`.
+- For changes/code generation: follow `bmad-build` guidelines and update relevant story docs.

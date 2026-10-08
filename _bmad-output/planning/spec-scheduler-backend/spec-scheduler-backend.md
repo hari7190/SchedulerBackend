@@ -75,7 +75,7 @@ The main application, over gRPC, can list, create, edit, and cancel events, chec
 - A contact is a person with name, email, and phone.
 - Every event has one organizer contact and may have many participant contacts.
 - Cancel keeps the event readable and removes it from conflict consideration.
-- Availability belongs to a contact, and a later update replaces it.
+- Availability is a dated time block on a 15-minute grid, for example 3:00 PM–10:00 PM on a date. Whether update replaces or merges is open.
 - No gap is required between events. A start time equal to another event's end time is not a conflict.
 - A conflict counts both the organizer and the participants.
 - The caller submits logs; the sidecar does not invent them.
@@ -83,5 +83,6 @@ The main application, over gRPC, can list, create, edit, and cancel events, chec
 
 ## Open Questions
 
+- Does an availability update replace the contact's blocks or merge with them?
 - Does listing contacts include inactive contacts?
 - Must recorded logs be readable by the caller?

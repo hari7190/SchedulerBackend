@@ -52,8 +52,8 @@ Pure service. Journeys are one sentence each. The actor is the main application.
 - **Inactive** — the status a successful contact delete sets. The contact remains stored. A contact who is organizer or participant on a future event cannot be set inactive.
 - **Organizer** — the one contact required on an event, in the organizer role.
 - **Participant** — a contact associated with an event besides the organizer. An event may have many.
-- **Availability** — the times a contact can be scheduled. [ASSUMPTION: add and update replace or extend that contact's availability; the README does not say which.]
-- **Conflict** — a proposed event that must not be stored as a success when its organizer or any participant is the organizer or a participant of an overlapping active event, or is outside their availability. No gap is required: a start time equal to another event's end time is not a conflict. [ASSUMPTION: availability of those same contacts counts. The shape of availability is still open.]
+- **Availability** — a block of time on a date, belonging to a contact, with a start and an end. The smallest unit is 15 minutes, so 3:00 PM–10:00 PM on a date is one availability and 3:10 PM is not a valid boundary. [ASSUMPTION: update replaces rather than merges.]
+- **Conflict** — a proposed event that must not be stored as a success when its organizer or any participant is the organizer or a participant of an overlapping active event, or is outside their availability. No gap is required: a start time equal to another event's end time is not a conflict. [ASSUMPTION: availability of those same contacts counts.]
 - **Active event** — an event that still occupies time. A cancelled event is not active.
 - **Cancel** — mark an event so it no longer occupies time. [ASSUMPTION: cancel is not a delete; the event remains readable.]
 - **Log** — a stored record of a scheduling action. [ASSUMPTION: the main application submits the log; the README does not say the sidecar writes logs on its own.]
@@ -159,8 +159,9 @@ The caller can add or update a contact's availability. Realizes UJ-4.
 
 **Consequences (testable):**
 - After a successful update, a conflict check (FR-5) uses the new availability.
+- A block whose start or end is not on a 15-minute boundary is rejected and not stored.
 - Updating availability for an unknown contact is rejected.
-- A second update for the same contact replaces the availability conflict checks use. [ASSUMPTION: update is a replacement of the contact's availability, not a merge. The README says "add/update" and does not define a merge.]
+- A second update for the same contact replaces the availability conflict checks use. [ASSUMPTION: update is a replacement, not a merge.]
 
 ### 4.3 Logs
 
@@ -235,7 +236,7 @@ The README states a load expectation, not a numeric latency target. Targets belo
 
 ## 9. Open Questions
 
-1. Is availability a weekly pattern, a list of ranges, or something else? Does update replace or merge?
+1. Does a later availability update replace the contact's blocks or merge with them?
 2. What is in a log, and must the caller be able to read logs back?
 3. Does "get all" mean every row in the store, or every row for one tenant or one owner? The README does not mention tenancy.
 4. Does listing contacts include inactive contacts?
@@ -244,7 +245,7 @@ The README states a load expectation, not a numeric latency target. Targets belo
 
 - §3 Event — title, capacity, date, start time, end time, one organizer, and many participants are confirmed. A minimum number of participants is not.
 - §3 Contact — a contact is a person with name, email, and phone. Confirmed.
-- §3 Availability — update replaces that contact's availability.
+- §3 Availability — a dated block of time on a 15-minute grid is confirmed. Whether update replaces or merges is still open.
 - §3 Conflict — the organizer and the participants both count. No gap is required. Confirmed. Availability of those same contacts counting is still an assumption.
 - §3 Cancel — cancel keeps the event readable and drops it from conflict consideration.
 - §3 Log — the caller submits the log.
